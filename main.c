@@ -6,7 +6,7 @@ Option(int) is_positive(int);
 int main() {
     
     int x = 4;
-    Option(int) o = prime(x);
+    Option(int) o = is_positive(x);
 
     if( is_some(o) ) {
         printf("%d is positive\n", (int)x);
