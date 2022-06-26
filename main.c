@@ -12,8 +12,6 @@ int main() {
         printf("%d is positive\n", (int)x);
     }
 
-    void* p = NULL;
-    Option opt = p;
     return 0;
 }
 

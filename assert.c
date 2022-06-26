@@ -2,7 +2,10 @@
 
 void assert_malloc(void* pVoid, const char* strFunction) {
     if( NULL == pVoid ) {
-        fprintf(stderr, "Error: %s(): malloc failed\n", strFunction);
+        if( NULL == strFunction )
+            fprintf(stderr, "Error: malloc failed\n", strFunction);
+        else
+            fprintf(stderr, "Error: %s(): malloc failed\n", strFunction);
         exit(-1);
     }
 }

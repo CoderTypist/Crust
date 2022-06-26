@@ -8,7 +8,7 @@ typedef void* Option_t;
 bool is_some(Option_t pOption);
 bool is_none(Option_t pOption);
 
-#define Option(...) Option
+#define Option(...) Option_t
 #define Some(p) ((void*)p)
 #define None NULL
 
