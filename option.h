@@ -3,13 +3,23 @@
 
 #include <stdbool.h>
 
-typedef void* Option_t;
+enum Option_e {
+    OPTION_SOME,
+    OPTION_NONE
+};
 
-bool is_some(Option_t pOption);
-bool is_none(Option_t pOption);
+typedef struct Option_t {
+    enum Option_e option;
+    void* pValue;
+} Option_t;
 
-#define Option(...) Option_t
-#define Some(p) ((Option_t)p)
-#define None NULL
+Option_t* Option_Some(void* pValue);
+Option_t* Option_None();
+bool is_some(Option_t* pOption);
+bool is_none(Option_t* pOption);
+
+#define Option(annot) Option_t*
+#define Some(p) Option_Some((void*)p)
+#define None Option_None()
 
 #endif // _OPTION_H_
