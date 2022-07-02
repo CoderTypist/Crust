@@ -1,6 +1,6 @@
-#include "assert.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "assert.h"
 
 void assert_alloc(void* pVoid, const char* strVar, const char* strFunction, const char* strAlloc) {
     if( !pVoid ) {

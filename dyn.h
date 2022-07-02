@@ -2,18 +2,38 @@
 #define _DYN_H_
 
 #include <stdbool.h>
+#include <string.h>
+#include "assert.h"
+#include "str.h"
 
 void* dyn_str(const char* pStr);
 void* dyn_var(void* pVoid, int iSize);
 
-/* # converts the argument to a string literal
- * 
- * if the argument starts with a double-quote, a string literal was passed
- * if the argument does not start with a double-quote, a string literal was not passed
- * 
- * if the argument is a string literal, do not use & to get the address
- * if the argument is not a string literal, use & to get the address
- */ 
-#define dyn(var) ( ((#var)[0] == '\"') ? dyn_str(var) : dyn_var((void*)&var, sizeof(var)) )
+#define dyn(var)                                       \
+    ({                                                 \
+        void* pHeap = calloc(1, sizeof(typeof(var)) ); \
+        ASSERT_CALLOC(pHeap, "pHeap", "dyn");          \
+        typeof(var) copy = var;                        \
+        memcpy(pHeap, &copy, sizeof(typeof(var)));     \
+        pHeap;                                         \
+    })
+
+#define unwrap(wrapper, type)                          \
+( ( '*' == (#type)[STRLEN(#type)-1] )                  \
+  ?                                                    \
+  ({                                                   \
+        type* pValue = wrapper->pValue;                \
+        free(wrapper);                                 \
+        pValue;                                        \
+  })                                                   \
+  :                                                    \
+  ({                                                   \
+        type value = *((type*)(wrapper->pValue));      \
+        free(wrapper);                                 \
+        value;                                         \
+  })                                                   \
+)
+
+#define dyns(s) dyn_str(s)
 
 #endif // _DYN_H_
