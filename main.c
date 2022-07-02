@@ -17,7 +17,7 @@ void example_03();
 Result(bool, char*) is_positive_r(int x);
 
 void example_04();
-Result(bool, char*) is_capital_r(const char* word);
+Result(char*, char*) is_capital_r(const char* word);
 
 int main() {
     
