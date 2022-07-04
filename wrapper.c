@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include "assert.h"
 #include "wrapper.h"
 
 bool _is_option(Wrapper_t* pWrapper) {

@@ -2,6 +2,8 @@
 #define _WRAPPER_H_
 
 #include <stdbool.h>
+#include <stdlib.h>
+#include "assert.h"
 
 enum Wrapper_e {
     WRAPPER_SOME,
@@ -38,5 +40,41 @@ bool is_err(Result_t* pResult);
 #define None Option_None()
 #define Ok(p) Result_Ok((void*)p)
 #define Err(p) Result_Err((void*)p)
+
+#define _unwrap_raw(wrapper, utype)                      \
+( ( '*' == (#utype)[STRLEN(#utype)-1] )                  \
+  ?                                                      \
+  ({                                                     \
+        utype* pValue = wrapper->pValue;                 \
+        free(wrapper);                                   \
+        pValue;                                          \
+  })                                                     \
+  :                                                      \
+  ({                                                     \
+        utype value = *((utype*)(wrapper->pValue));      \
+        free(wrapper);                                   \
+        value;                                           \
+  })                                                     \
+)
+
+#define unwrap(wrapper, utype)                                                            \
+({                                                                                       \
+    ASSERT_NOT_NULL(wrapper, "wrapper", "unwrap");                                       \
+    if( !is_some(wrapper) && !is_ok(wrapper) ) {                                         \
+        fprintf(stderr, "Error: unwrap(): expected WRAPPER_SOME or WRAPPER_OK\n");       \
+        switch(wrapper->type) {                                                          \
+            case WRAPPER_NONE:                                                           \
+                fprintf(stderr, "\tencounted WRAPPER_NONE\n");                           \
+                break;                                                                   \
+            case WRAPPER_ERR:                                                            \
+                fprintf(stderr, "\tencountered WRAPPER_ERR\n");                          \
+                break;                                                                   \
+            default:                                                                     \
+                fprintf(stderr, "\tinvalid wrapper type\n");                             \
+        }                                                                                \
+        exit(-1);                                                                        \
+    }                                                                                    \
+    _unwrap_raw(wrapper, utype);                                                          \
+})
 
 #endif // _WRAPPER_H_

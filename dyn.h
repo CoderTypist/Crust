@@ -18,22 +18,6 @@ void* dyn_var(void* pVoid, int iSize);
         pHeap;                                         \
     })
 
-#define unwrap(wrapper, type)                          \
-( ( '*' == (#type)[STRLEN(#type)-1] )                  \
-  ?                                                    \
-  ({                                                   \
-        type* pValue = wrapper->pValue;                \
-        free(wrapper);                                 \
-        pValue;                                        \
-  })                                                   \
-  :                                                    \
-  ({                                                   \
-        type value = *((type*)(wrapper->pValue));      \
-        free(wrapper);                                 \
-        value;                                         \
-  })                                                   \
-)
-
 #define dyns(s) dyn_str(s)
 
 #endif // _DYN_H_

@@ -135,26 +135,26 @@ void example_04() {
     Result(char*, char*) r1 = is_capital_r(words[0]);
     if( is_ok(r1) )
         printf("\t%s starts with a capital letter\n", unwrap(r1, char*));
-    else
-        printf("\tError: %s\n", unwrap(r1, char*));
+    // else
+    //     printf("\tError: %s\n", unwrap(r1, char*));
 
     Result(char*, char*) r2 = is_capital_r(words[1]);
     if( is_ok(r2) )
         printf("\t%s starts with a capital letter\n", unwrap(r2, char*));
-    else
-        printf("\tError: %s\n", unwrap(r2, char*));
+    // else
+    //     printf("\tError: %s\n", unwrap(r2, char*));
 
     Result(char*, char*) r3 = is_capital_r(words[2]);
     if( is_ok(r3) )
         printf("\t%s starts with a capital letter\n", unwrap(r3, char*));
-    else
-        printf("\tError: %s\n", unwrap(r3, char*));
+    // else
+    //     printf("\tError: %s\n", unwrap(r3, char*));
 
     Result(char*, char*) r4 = is_capital_r(words[3]);
     if( is_ok(r4) )
         printf("\t%s starts with a capital letter\n", unwrap(r4, char*));
-    else
-        printf("\tError: %s\n", unwrap(r4, char*));
+    // else
+    //     printf("\tError: %s\n", unwrap(r4, char*));
 }
 
 Result(char*, char*) is_capital_r(const char* word) {
