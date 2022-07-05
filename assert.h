@@ -10,4 +10,6 @@ void assert_alloc(void* pVoid, const char* strVar, const char* strFunction, cons
 void assert_not_null(void* pVoid, const char* strVar, const char* strFunction);
 #define ASSERT_NOT_NULL(p, strVar, strFunction) assert_not_null((void*)p, strVar, strFunction)
 
+#define BLAZE fprintf(stderr, "\t@%s:%d\n", __FILE__, __LINE__)
+
 #endif // _ASSERT_H_

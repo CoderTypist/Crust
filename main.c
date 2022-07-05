@@ -4,23 +4,32 @@
 #include "dyn.h"
 #include "wrapper.h"
 
-// NOTE: Examples do not yet free memory
+// TODO: Tests for try(), try_ok(), and try_some()
+// TODO: _unwrap_raw should free heap memory when dereferencing
 
-void example_01();
-Option(int) is_positive_o(int);
+void test_is_some();
+void test_is_none();
+void test_is_ok();
+void test_is_err();
 
-Result(bool, char*) is_positive_r(int x);
-void example_02();
-Option(char*) is_capital_o(const char* word);
-
-void example_03();
-Result(bool, char*) is_positive_r(int x);
-
-void example_04();
-Result(char*, char*) is_capital_r(const char* word);
+void test_if_some();
+void test_if_none();
+void test_if_ok();
+void test_if_err();
 
 int main() {
-    
+
+    test_is_some();
+    test_is_none();
+    test_is_ok();
+    test_is_err();
+
+    test_if_some();
+    test_if_none();
+    test_if_ok();
+    test_if_err();
+
+    /*
     printf("EXAMPLE 01:\n");
     example_01();
     printf("\n");
@@ -36,20 +45,9 @@ int main() {
     printf("EXAMPLE 04:\n");
     example_04();
     printf("\n");
+    */
 
     return 0;
-}
-
-/********************************************************************************************/
-
-void example_01() {
-
-    Option(int) o = is_positive_o(4);
-
-    // printf("\t%d is positive\n", (*(int*)(o->pValue)) );
-    if( is_some(o) ) {
-        printf("\t%d is positive\n", unwrap(o, int) );
-    }
 }
 
 Option(int) is_positive_o(int x) {
@@ -61,7 +59,103 @@ Option(int) is_positive_o(int x) {
     }
 }
 
-/********************************************************************************************/
+Result(bool, char*) is_positive_r(int x) {
+    if( 0 == x )
+        return Err(dyns("Can't tell if 0 is positive or negative"));
+    else if( x > 0 )
+        return Ok(dyn(true));
+    else
+        return Err(dyns("Value is negative"));
+}
+
+void test_is_some() {
+    Option(bool) o = is_positive_o(1);
+    if( is_some(o) )
+        printf("\tPASS: test_is_some(): o: Received Some: %d\n", unwrap(o, bool));
+    else
+        printf("\nFAIL: test_is_some(): o: Received None, expected Some\n");
+}
+
+void test_is_none() {
+    Option(bool) o = is_positive_o(-1);
+    if( is_none(o) )
+        printf("\tPASS: test_is_none(): o: Received None\n");
+    else
+        printf("\nFAIL: test_is_none(): o: Received Some, expected None\n");
+}
+
+void test_is_ok() {
+    Result(bool, char*) r = is_positive_r(1);
+    if( is_ok(r) )
+        printf("\tPASS: test_is_ok(): r: Received Ok: %d\n", unwrap(r, bool));
+    else
+        printf("\nFAIL: test_is_ok(): r: Received Err, expected Ok\n");
+}
+
+void test_is_err() {
+    Result(bool, char*) r = is_positive_r(-1);
+    if( is_err(r) )
+        printf("\tPASS: test_is_err(): r: Received Err\n");
+    else
+        printf("\nFAIL: test_is_err(): r: Received Ok, expected Err\n");
+}
+
+void test_if_some() {
+    bool b = if_some(is_positive_o(1), bool);
+    printf("\tPASS: test_if_some(): o: Received Some: %d\n", b);
+    // bool b = if_some(is_positive_o(-1), bool);
+    // Error: if_some(): expected WRAPPER_SOME, ecountered WRAPPER_NONE
+}
+
+void test_if_none() {
+    bool b = if_none(is_positive_o(-1), bool);
+    printf("\tPASS: test_if_none(): o: Received None\n");
+    // bool b = if_none(is_positive_o(1), bool);
+    // Error: if_none(): expected WRAPPER_NONE, ecountered WRAPPER_SOME
+}
+
+void test_if_ok() {
+    bool b = if_ok(is_positive_r(1), bool);
+    printf("\tPASS: test_if_ok(): r: Received Ok: %d\n", b);
+    // bool b = if_ok(is_positive_r(-1), bool);
+    // Error: if_ok(): expected WRAPPER_OK, ecountered WRAPPER_ERR
+}
+
+void test_if_err() {
+    char* s = if_err(is_positive_r(-1), char*);
+    printf("\tPASS: test_if_err(): r: Received Err: %s\n", s);
+    // char* s = if_err(is_positive_r(1), bool);
+    // Error: if_err(): expected WRAPPER_ERR, ecountered WRAPPER_OK
+}
+
+/*
+
+void example_01();
+Option(int) is_positive_o(int);
+
+Result(bool, char*) is_positive_r(int x);
+void example_02();
+Option(char*) is_capital_o(const char* word);
+
+void example_03();
+Result(bool, char*) is_positive_r(int x);
+
+void example_04();
+Result(char*, char*) is_capital_r(const char* word);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+void example_01() {
+
+    Option(int) o = is_positive_o(4);
+
+    // printf("\t%d is positive\n", (*(int*)(o->pValue)) );
+    if( is_some(o) ) {
+        printf("\t%d is positive\n", unwrap(o, int) );
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 void example_02() {
     char words[4][10] = {
@@ -101,7 +195,7 @@ Option(char*) is_capital_o(const char* word) {
     return None;
 }
 
-/********************************************************************************************/
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 void example_03() {
 
@@ -113,16 +207,7 @@ void example_03() {
         printf("\tError: %s\n", (char*)(r->pValue));
 }
 
-Result(bool, char*) is_positive_r(int x) {
-    if( 0 == x )
-        return Err(dyns("Can't tell if 0 is positive or negative"));
-    else if( x > 0 )
-        return Ok(dyn(true));
-    else
-        return Ok(dyn(false));
-}
-
-/********************************************************************************************/
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 void example_04() {
     char words[4][10] = {
@@ -145,6 +230,7 @@ void example_04() {
     //     printf("\tError: %s\n", unwrap(r2, char*));
 
     Result(char*, char*) r3 = is_capital_r(words[2]);
+
     if( is_ok(r3) )
         printf("\t%s starts with a capital letter\n", unwrap(r3, char*));
     // else
@@ -166,7 +252,5 @@ Result(char*, char*) is_capital_r(const char* word) {
     return Err(dyns("First character was not a capital letter"));
 }
 
-/********************************************************************************************/
-
-
-/********************************************************************************************/
+/////////////////////////////////////////////////////////////////////////////////////////////
+*/
