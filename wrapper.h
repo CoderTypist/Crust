@@ -184,7 +184,7 @@ bool is_err(Result_t* pResult);
                 fprintf(stderr, "WRAPPER_NONE\n");                             \
                 break;                                                         \
             case WRAPPER_OK:                                                   \
-                fprintf(stderr, " WRAPPER_OK\n");                    \
+                fprintf(stderr, " WRAPPER_OK\n");                              \
                 break;                                                         \
             default:                                                           \
                 fprintf(stderr, " invalid wrapper type\n");                    \
@@ -199,14 +199,14 @@ bool is_err(Result_t* pResult);
 // WRAPPER_NONE: wrapper
 // WRAPPER_OK:   _unwrap_raw(wrapper, utype)
 // WRAPPER_ERR:  wrapper
-#define try(wrapper, utype)                                                      \
+#define try(wrapper, utype)                                                          \
     ({                                                                               \
         ASSERT_NOT_NULL(wrapper, "wrapper", "try");                                  \
         if( ( WRAPPER_SOME != wrapper->type ) && ( WRAPPER_OK != wrapper->type ) ) { \
             switch(wrapper->type) {                                                  \
                 case WRAPPER_NONE:                                                   \
                 case WRAPPER_ERR:                                                    \
-                    return _unwrap_raw(wrapper, utype);                              \
+                    return wrapper;                                                  \
                 default:                                                             \
                     fprintf(stderr, "Error: try(): invalid wrapper type\n");         \
                     BLAZE;                                                           \
