@@ -32,6 +32,7 @@ void assert_alloc(void* pVoid, const char* strVar, const char* strFunction, cons
                     fprintf(stderr, "Error: alloc failed\n");
             }
         }
+        TRACE;
         exit(-1);
     }
 }
@@ -50,5 +51,7 @@ void assert_not_null(void* pVoid, const char* strVar, const char* strFunction) {
             else
                 fprintf(stderr, "Error: expected non-null value, received NULL\n");
         }
+        TRACE;
+        exit(-1);
     }
 }

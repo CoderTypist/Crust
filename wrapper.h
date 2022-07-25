@@ -41,8 +41,9 @@ bool is_err(Result_t* pResult);
 #define Ok(p) Result_Ok((void*)p)
 #define Err(p) Result_Err((void*)p)
 
+// It is OK to use strlen here because #utype will not cause a buffer overflow
 #define _unwrap_raw(wrapper, utype)                     \
-    ( ( '*' == (#utype)[STRLEN(#utype)-1] )             \
+    ( ( '*' == (#utype)[strlen(#utype)-1] )             \
       ?                                                 \
       ({                                                \
             utype* pValue = wrapper->pValue;            \
@@ -76,7 +77,7 @@ bool is_err(Result_t* pResult);
                 default:                                                                          \
                     fprintf(stderr, "invalid wrapper type\n");                                    \
             }                                                                                     \
-            BLAZE;                                                                                \
+            TRACE;                                                                                \
             exit(-1);                                                                             \
         }                                                                                         \
         _unwrap_raw(wrapper, utype);                                                              \
@@ -104,7 +105,7 @@ bool is_err(Result_t* pResult);
                 default:                                                             \
                     fprintf(stderr, "invalid wrapper type\n");                       \
             }                                                                        \
-            BLAZE;                                                                   \
+            TRACE;                                                                   \
             exit(-1);                                                                \
         }                                                                            \
         _unwrap_raw(wrapper, utype);                                                 \
@@ -132,7 +133,7 @@ bool is_err(Result_t* pResult);
                 default:                                                             \
                     fprintf(stderr, "invalid wrapper type\n");                       \
             }                                                                        \
-            BLAZE;                                                                   \
+            TRACE;                                                                   \
             exit(-1);                                                                \
         }                                                                            \
         free(wrapper);                                                               \
@@ -161,7 +162,7 @@ bool is_err(Result_t* pResult);
                 default:                                                         \
                     fprintf(stderr, "invalid wrapper type\n");                   \
             }                                                                    \
-            BLAZE;                                                               \
+            TRACE;                                                               \
             exit(-1);                                                            \
         }                                                                        \
         _unwrap_raw(wrapper, utype);                                             \
@@ -189,7 +190,7 @@ bool is_err(Result_t* pResult);
             default:                                                           \
                 fprintf(stderr, " invalid wrapper type\n");                    \
         }                                                                      \
-        BLAZE;                                                                 \
+        TRACE;                                                                 \
         exit(-1);                                                              \
     }                                                                          \
     _unwrap_raw(wrapper, utype);                                               \
@@ -209,7 +210,7 @@ bool is_err(Result_t* pResult);
                     return wrapper;                                                  \
                 default:                                                             \
                     fprintf(stderr, "Error: try(): invalid wrapper type\n");         \
-                    BLAZE;                                                           \
+                    TRACE;                                                           \
                     exit(-1);                                                        \
             }                                                                        \
         }                                                                            \
@@ -236,7 +237,7 @@ bool is_err(Result_t* pResult);
                 default:                                                                                   \
                     fprintf(stderr, "invalid wrapper type\n");                                             \
             }                                                                                              \
-            BLAZE;                                                                                         \
+            TRACE;                                                                                         \
             exit(-1);                                                                                      \
         }                                                                                                  \
         _unwrap_raw(wrapper, utype);                                                                       \
@@ -262,7 +263,7 @@ bool is_err(Result_t* pResult);
                 default:                                                                                \
                     fprintf(stderr, "invalid wrapper type\n");                                          \
             }                                                                                           \
-            BLAZE;                                                                                      \
+            TRACE;                                                                                      \
             exit(-1);                                                                                   \
         }                                                                                               \
         _unwrap_raw(wrapper, utype);                                                                    \
