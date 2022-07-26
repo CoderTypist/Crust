@@ -119,11 +119,7 @@ char* safe_strncat(char* pDest, char* pSrc, size_t maxlen, size_t n) {
         exit(-1);
     }
 
-    // check to see if pDest even has a NULL byte
-    // find the index of the first NULL byte
-    // check if n >= ( maxlen - indexOfFirstNULLByte )
-
-    return NULL;
+    return strncat(pDest, pSrc, n);
 }
 
 // Unsafe because up to n bytes can be copied regardless of pSrc size
