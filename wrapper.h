@@ -53,6 +53,7 @@ bool is_err(Result_t* pResult);
       :                                                 \
       ({                                                \
             utype value = *((utype*)(wrapper->pValue)); \
+            free(wrapper->pValue);                      \
             free(wrapper);                              \
             value;                                      \
       })                                                \

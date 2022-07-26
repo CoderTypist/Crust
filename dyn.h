@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include <string.h>
 #include "assert.h"
-#include "str.h"
 
 void* dyn_str(const char* pStr);
 void* dyn_var(void* pVoid, int iSize);

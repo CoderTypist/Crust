@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "assert.h"
 #include "str.h"
@@ -41,7 +42,7 @@ size_t safe_strnlen(char* pStr, size_t maxlen) {
     return len;
 }
 
-// Unsafe because up to MAX_LEN_STR bytes are copied regardless of pDest size
+// Unsafe because up to MAX_LEN_STR bytes can be copied regardless of pDest size
 // Unsafe because len of pSrc can be exceeded if not NULL terminated
 // A buffer overflow would be limited to MAX_LEN_STR bytes
 // Setting MAX_LEN_STR to a smaller value limits the effect of a buffer overflow, but limits flexibility
@@ -50,7 +51,7 @@ char* unsafe_strcpy(char* pDest, char* pSrc) {
     ASSERT_NOT_NULL(pDest, "pDest", "unsafe_strcpy");
     ASSERT_NOT_NULL(pSrc, "pSrc", "unsafe_strcpy");
 
-    size_t lenSrc = safe_strlen(pSrc);   // ensures pSrc is NULL terminated
+    size_t lenSrc = unsafe_strlen(pSrc);   // ensures pSrc is NULL terminated
     pDest[lenSrc] = '\0'; // if MAX_LEN_STR == lenSrc
     return strncpy(pDest, pSrc, lenSrc);
 }
@@ -67,7 +68,7 @@ char* safe_strncpy(char* pDest, char* pSrc, size_t n) {
     return strncpy(pDest, pSrc, lenSrc);
 }
 
-// Unsafe because up to MAX_LEN_STR bytes are copied regardless of pDest size
+// Unsafe because up to MAX_LEN_STR bytes can be copied regardless of pDest size
 // Unsafe because len of pSrc can be exceeded if not NULL terminated
 char* unsafe_strcat(char *pDest, char* pSrc) {
 
@@ -79,7 +80,7 @@ char* unsafe_strcat(char *pDest, char* pSrc) {
     return strncat(pDest, pSrc, lenSrc);
 }
 
-// Unsafe because up to n bytes are copied regardless of pDest size
+// Unsafe because up to n bytes can be copied regardless of pDest size
 // Safer because max bytes to read from pSrc is specifiec
 char* safeish_strncat(char* pDest, char* pSrc, size_t n) {
 
@@ -123,4 +124,29 @@ char* safe_strncat(char* pDest, char* pSrc, size_t maxlen, size_t n) {
     // check if n >= ( maxlen - indexOfFirstNULLByte )
 
     return NULL;
+}
+
+// Unsafe because up to n bytes can be copied regardless of pSrc size
+char* unsafe_strdup(char* pSrc) {
+
+    ASSERT_NOT_NULL(pSrc, "pSrc", "unsafe_strdup");
+    
+    size_t len = unsafe_strlen(pSrc);
+    char* pHeap = strndup(pSrc, MAX_LEN_STR);
+    ASSERT_NOT_NULL(pHeap, "pHeap", "unsafe_strdup");
+
+    return pHeap;
+}
+
+// Safe because max bytes to read from pSrc is specified
+char* safe_strndup(char* pSrc, size_t n) {
+
+    ASSERT_NOT_NULL(pSrc, "pSrc", "safe_strndup");
+    ASSERT_POSITIVE(n, "n", "safe_strndup");
+
+    size_t len = safe_strnlen(pSrc, n);
+    char* pHeap = strndup(pSrc, n);
+    ASSERT_NOT_NULL(pHeap, "pHeap", "safe_strndup");
+
+    return pHeap;
 }

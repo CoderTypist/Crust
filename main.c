@@ -5,7 +5,6 @@
 #include "wrapper.h"
 
 // TODO: Tests for try_ok() and try_some()
-// TODO: _unwrap_raw should free heap memory when dereferencing
 
 Option(int) is_positive_o(int x);
 Result(bool, char*) is_positive_r(int x);
